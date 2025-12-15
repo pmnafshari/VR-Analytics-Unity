@@ -12320,9 +12320,6 @@ PrefabInstance:
       addedObject: {fileID: 1671653070}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 4ed41858240845b479082276b0831228, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1671653069}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 4ed41858240845b479082276b0831228, type: 3}
-      insertIndex: -1
       addedObject: {fileID: 1671653068}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 4ed41858240845b479082276b0831228, type: 3}
       insertIndex: -1
@@ -12357,7 +12354,7 @@ MeshCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 5
-  m_Convex: 0
+  m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: -4972316377868672352, guid: 4ed41858240845b479082276b0831228, type: 3}
 --- !u!114 &1671653066
@@ -12380,7 +12377,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1671653062}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0ad34abafad169848a38072baa96cdb2, type: 3}
   m_Name: 
@@ -12546,18 +12543,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &1671653069
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1671653062}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 52c109905ffc7425e855220fe2a4ee0e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!65 &1671653070
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -12575,7 +12560,7 @@ BoxCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Size: {x: 0.025468929, y: 0.0050000004, z: 0.029999979}
   m_Center: {x: -0.0022693968, y: 6.2934456e-11, z: 0.0000038624266}
@@ -13171,7 +13156,7 @@ Light:
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: 9.1835e-41, y: 4.2611675e-37, z: 1.02e-43, w: 3e-45}
+  m_BoundingSphereOverride: {x: 1.9865698e+29, y: 6.9193098e+22, z: 10.965915, w: 7.2715916e+31}
   m_UseBoundingSphereOverride: 0
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
@@ -16830,7 +16815,19 @@ MonoBehaviour:
       m_Calls: []
   m_SelectEntered:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1565887664197881482}
+        m_TargetAssemblyTypeName: TeleportEvents, Assembly-CSharp
+        m_MethodName: OnTeleport
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   m_SelectExited:
     m_PersistentCalls:
       m_Calls: []

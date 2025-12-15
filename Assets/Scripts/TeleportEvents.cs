@@ -3,44 +3,28 @@ using UnityEngine.XR.Interaction.Toolkit;
 
 public class TeleportEvents : MonoBehaviour
 {
-    private UnityEngine.XR.Interaction.Toolkit.Locomotion.Teleportation.TeleportationProvider teleportProvider;
+    private Vector3 lastPosition;
 
-    private void Awake()
+    private void Start()
     {
-        // Find the TeleportationProvider in the scene
-        teleportProvider = FindObjectOfType<UnityEngine.XR.Interaction.Toolkit.Locomotion.Teleportation.TeleportationProvider>();
-
-        if (teleportProvider == null)
-        {
-            Debug.LogError("TeleportationProvider not found in scene!");
-        }
+        lastPosition = transform.position;
     }
 
-    private void OnEnable()
+    // This function is called when the player teleports to a new position
+    public void OnTeleport(SelectEnterEventArgs args)
     {
-        if (teleportProvider != null)
-        {
-            // When the teleportation is finished, call the OnTeleportFinished function
-            teleportProvider.endLocomotion += OnTeleportFinished;
-        }
-    }
+        Vector3 newPosition = args.interactorObject.transform.position;
 
-    private void OnDisable()
-    {
-        if (teleportProvider != null)
-        {
-            teleportProvider.endLocomotion -= OnTeleportFinished;
-        }
-    }
+        Debug.Log($"[Analytics] Teleport | From: {lastPosition} | To: {newPosition}");
 
-    private void OnTeleportFinished(LocomotionSystem locomotionSystem)
-    {
-        Debug.Log("Teleport event finished!");
-
-        // Send the event to the analytics system
         if (AnalyticsManager.Instance != null)
         {
-            AnalyticsManager.Instance.LogEvent("Teleport", "User Teleported");
+            AnalyticsManager.Instance.LogEvent(
+                "Teleport",
+                $"From:{lastPosition} To:{newPosition}"
+            );
         }
+
+        lastPosition = newPosition;
     }
 }
