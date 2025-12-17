@@ -15,3 +15,16 @@ UserSettings/
 *.pidb
 *.booproj
 *.svd
+# Unity
+Library/
+Temp/
+Obj/
+Build/
+Builds/
+Logs/
+
+# Analytics outputs
+*.csv
+
+# Python
+__pycache__/

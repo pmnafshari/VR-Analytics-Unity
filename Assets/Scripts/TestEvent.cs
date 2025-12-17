@@ -1,13 +1,20 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class TestEvent : MonoBehaviour
 {
     private void Start()
     {
-        // وقتی سکانس لود می‌شود
+        // when the scene is loaded
         if (AnalyticsManager.Instance != null)
         {
-            AnalyticsManager.Instance.LogEvent("GameStarted", "Scene loaded");
+            AnalyticsManager.Instance.LogEvent(
+                "Session",
+                "GameStarted",
+                SceneManager.GetActiveScene().name
+            );
         }
+
+        Debug.Log("[Analytics][Session] GameStarted");
     }
 }

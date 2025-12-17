@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.XR.Interaction.Toolkit;
 
 public class TeleportEvents : MonoBehaviour
 {
@@ -10,17 +9,19 @@ public class TeleportEvents : MonoBehaviour
         lastPosition = transform.position;
     }
 
-    // This function is called when the player teleports to a new position
-    public void OnTeleport(SelectEnterEventArgs args)
+    // this function is called when the player teleports to a new position
+    public void OnTeleport()
     {
-        Vector3 newPosition = args.interactorObject.transform.position;
+        Vector3 newPosition = transform.position;
 
-        Debug.Log($"[Analytics] Teleport | From: {lastPosition} | To: {newPosition}");
+        Debug.Log($"[Analytics][Teleport] From {lastPosition} To {newPosition}");
 
         if (AnalyticsManager.Instance != null)
         {
             AnalyticsManager.Instance.LogEvent(
                 "Teleport",
+                "Teleport",
+                gameObject.name,
                 $"From:{lastPosition} To:{newPosition}"
             );
         }

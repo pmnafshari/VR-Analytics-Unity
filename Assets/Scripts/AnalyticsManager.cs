@@ -2,16 +2,14 @@ using UnityEngine;
 
 public class AnalyticsManager : MonoBehaviour
 {
-    // دسترسی سراسری
     public static AnalyticsManager Instance;
 
     private void Awake()
     {
-        // فقط یک نسخه نگه داریم
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject); // توی سکانس‌های بعدی هم بمونه
+            DontDestroyOnLoad(gameObject);
         }
         else
         {
@@ -19,15 +17,42 @@ public class AnalyticsManager : MonoBehaviour
         }
     }
 
-    // نسخه ساده فقط با نام رویداد
-    public void LogEvent(string eventName)
+    /// <summary>
+    /// استاندارد واحد لاگ
+    /// </summary>
+    /// <param name="category">UI, Gaze, Session, Teleport, Interaction</param>
+    /// <param name="action">Action name</param>
+    /// <param name="name">Object/UI name</param>
+    /// <param name="value">Optional value</param>
+    /// <param name="details">Optional details</param>
+    public void LogEvent(
+        string category,
+        string action,
+        string name = "",
+        string value = "",
+        string details = ""
+    )
     {
-        Debug.Log($"[Analytics] Event: {eventName}");
-    }
+        string log =
+            $"[Analytics]" +
+            $"[{category}] " +
+            $"Action={action} " +
+            $"Name={name} " +
+            $"Value={value} " +
+            $"Details={details} " +
+            $"Time={Time.time:0.00}";
 
-    // نسخه با داده اضافی (مثلاً نام آبجکت، موقعیت و ...)
-    public void LogEvent(string eventName, string data)
-    {
-        Debug.Log($"[Analytics] Event: {eventName} | Data: {data}");
+        Debug.Log(log);
+
+        // اگر CSV Logger هست، همزمان بنویس
+        if (AnalyticsFileLogger.Instance != null)
+        {
+            AnalyticsFileLogger.Instance.LogEvent(
+                action,
+                name,
+                value,
+                details
+            );
+        }
     }
 }

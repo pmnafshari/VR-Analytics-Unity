@@ -2,36 +2,30 @@ using UnityEngine;
 
 public class SessionManager : MonoBehaviour
 {
-    private float sessionStartTime;
-    private bool sessionEnded = false;
+    private float startTime;
 
-    void Awake()
+    void Start()
     {
-        sessionStartTime = Time.time;
+        startTime = Time.time;
 
-        Debug.Log("[Analytics][Session] Started");
+        AnalyticsManager.Instance?.LogEvent(
+            "Session",
+            "SessionStart",
+            "Scene",
+            UnityEngine.SceneManagement.SceneManager.GetActiveScene().name
+        );
     }
 
-    void OnApplicationQuit()
+    private void OnApplicationQuit()
     {
-        EndSession("ApplicationQuit");
-    }
+        float duration = Time.time - startTime;
 
-    void OnDestroy()
-    {
-        // For when Stop is pressed
-        if (!sessionEnded)
-        {
-            EndSession("EditorStop");
-        }
-    }
-
-    private void EndSession(string reason)
-    {
-        sessionEnded = true;
-
-        float duration = Time.time - sessionStartTime;
-
-        Debug.Log($"[Analytics][Session] Ended | Reason: {reason} | Duration: {duration:0.00}s");
+        AnalyticsManager.Instance?.LogEvent(
+            "Session",
+            "SessionEnd",
+            "Application",
+            "",
+            $"Duration={duration:0.00}"
+        );
     }
 }

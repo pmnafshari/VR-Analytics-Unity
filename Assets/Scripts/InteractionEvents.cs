@@ -4,25 +4,37 @@ public class InteractionEvents : MonoBehaviour
 {
     public void OnHoverEnter()
     {
-        if (AnalyticsManager.Instance == null) return;
-        AnalyticsManager.Instance.LogEvent("HoverStart", gameObject.name);
+        AnalyticsManager.Instance?.LogEvent(
+            "Interaction",
+            "HoverStart",
+            gameObject.name
+        );
     }
 
     public void OnHoverExit()
     {
-        if (AnalyticsManager.Instance == null) return;
-        AnalyticsManager.Instance.LogEvent("HoverEnd", gameObject.name);
+        AnalyticsManager.Instance?.LogEvent(
+            "Interaction",
+            "HoverEnd",
+            gameObject.name
+        );
     }
 
     public void OnGrab()
     {
-        if (AnalyticsManager.Instance == null) return;
-        AnalyticsManager.Instance.LogEvent("GrabStart", gameObject.name);
+        AnalyticsManager.Instance?.LogEvent(
+            "Interaction",
+            "GrabStart",
+            gameObject.name
+        );
     }
 
     public void OnRelease()
     {
-        if (AnalyticsManager.Instance == null) return;
-        AnalyticsManager.Instance.LogEvent("GrabEnd", gameObject.name);
+        AnalyticsManager.Instance?.LogEvent(
+            "Interaction",
+            "GrabEnd",
+            gameObject.name
+        );
     }
 }

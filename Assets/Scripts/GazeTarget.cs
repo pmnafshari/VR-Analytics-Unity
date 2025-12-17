@@ -4,31 +4,37 @@ using UnityEngine.XR.Interaction.Toolkit;
 public class GazeTarget : MonoBehaviour
 {
     public float minGazeTime = 0.5f;
-    private float gazeTimer = 0f;
-    private bool isGazed = false;
+
+    private float timer;
+    private bool gazing;
 
     public void OnGazeEnter(HoverEnterEventArgs args)
     {
-        isGazed = true;
-        gazeTimer = 0f;
+        gazing = true;
+        timer = 0f;
     }
 
     public void OnGazeExit(HoverExitEventArgs args)
     {
-        isGazed = false;
-        gazeTimer = 0f;
+        gazing = false;
+        timer = 0f;
     }
 
-    private void Update()
+    void Update()
     {
-        if (!isGazed) return;
+        if (!gazing) return;
 
-        gazeTimer += Time.deltaTime;
-        if (gazeTimer >= minGazeTime)
-            {
-                // log/analytics here
-            Debug.Log($"Gazed: {gameObject.name}");
-            gazeTimer = 0f;
+        timer += Time.deltaTime;
+        if (timer >= minGazeTime)
+        {
+            AnalyticsManager.Instance?.LogEvent(
+                "Gaze",
+                "GazeHold",
+                gameObject.name,
+                minGazeTime.ToString("0.00")
+            );
+
+            timer = 0f;
         }
     }
 }
