@@ -2,28 +2,32 @@ using UnityEngine;
 
 public class UIInteractionEvent : MonoBehaviour
 {
-    public string uiName = "UI_Element";
-    public string uiCategory = "Default";
+    [SerializeField] private string uiName = "UI_Element";
+    [SerializeField] private string uiCategory = "UI";
 
-    public void OnButtonClick()
+    public void OnButton()
     {
-        AnalyticsManager.Instance?.LogEvent(
-            "UI",
-            "ButtonClick",
+        if (AnalyticsManager.Instance == null) return;
+
+        AnalyticsManager.Instance.LogEvent(
+            uiCategory,
+            "ButtonClicked",
             uiName,
-            "",
-            uiCategory
+            0f,
+            ""
         );
     }
 
-    public void OnSliderValueChanged(float value)
+    public void OnSliderChanged(float value)
     {
-        AnalyticsManager.Instance?.LogEvent(
-            "UI",
+        if (AnalyticsManager.Instance == null) return;
+
+        AnalyticsManager.Instance.LogEvent(
+            uiCategory,
             "SliderChanged",
             uiName,
-            value.ToString("0.00"),
-            uiCategory
+            value,
+            ""
         );
     }
 }

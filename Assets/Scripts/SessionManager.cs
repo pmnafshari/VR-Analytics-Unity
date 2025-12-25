@@ -1,31 +1,15 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class SessionManager : MonoBehaviour
 {
-    private float startTime;
-
-    void Start()
+    private void Start()
     {
-        startTime = Time.time;
+        if (AnalyticsManager.Instance == null) return;
 
-        AnalyticsManager.Instance?.LogEvent(
-            "Session",
-            "SessionStart",
-            "Scene",
-            UnityEngine.SceneManagement.SceneManager.GetActiveScene().name
-        );
-    }
+        string scene = SceneManager.GetActiveScene().name;
 
-    private void OnApplicationQuit()
-    {
-        float duration = Time.time - startTime;
-
-        AnalyticsManager.Instance?.LogEvent(
-            "Session",
-            "SessionEnd",
-            "Application",
-            "",
-            $"Duration={duration:0.00}"
-        );
+        AnalyticsManager.Instance.LogEvent("Session", "SessionStart", "Scene", 0f, scene);
+        AnalyticsManager.Instance.LogEvent("Session", "GameStarted", scene, 0f, "");
     }
 }

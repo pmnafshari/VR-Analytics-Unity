@@ -1,36 +1,20 @@
 using System;
+using System.Globalization;
 using System.IO;
-using System.Text;
 using UnityEngine;
 
 public class AnalyticsFileLogger : MonoBehaviour
 {
-    public static AnalyticsFileLogger Instance { get; private set; }
-
-    [Header("File Settings")]
-    public string filePrefix = "session";
-    public bool writeHeader = true;
-
-    private StreamWriter writer;
-    private string filePath;
-    private float sessionStartTime;
+    private StreamWriter _writer;
+    private float _startTime;
+    private string _userId;
+    private string _filePath;
 
     private void Awake()
     {
-        if (Instance != null && Instance != this)
-        {
-            Destroy(gameObject);
-            return;
-        }
-
-        Instance = this;
-        DontDestroyOnLoad(gameObject);
-    }
-
-    private void Start()
-    {
-        OpenFile();
-        sessionStartTime = Time.time;
+        _startTime = Time.time;
+        _userId = SystemInfo.deviceUniqueIdentifier;
+        StartNewFile();
     }
 
     private void OnApplicationQuit()
@@ -38,110 +22,52 @@ public class AnalyticsFileLogger : MonoBehaviour
         CloseFile();
     }
 
-    // --------------------------------------------------
-    // PUBLIC LOGGING API (used by AnalyticsManager)
-    // Schema:
-    // Time, SessionTime, UserID, Category, Action, Target, Value, Details
-    // --------------------------------------------------
-    public void LogEvent(
-        string category,
-        string action,
-        string target = "",
-        string value = "",
-        string details = ""
-    )
+    private void StartNewFile()
     {
-        if (writer == null) return;
+        string dir = Path.Combine(Application.persistentDataPath);
+        Directory.CreateDirectory(dir);
 
-        string time = Time.time.ToString("F2");
-        string sessionTime = (Time.time - sessionStartTime).ToString("F2");
+        string ts = DateTime.Now.ToString("yyyyMMdd_HHmmss");
+        _filePath = Path.Combine(dir, $"session_{ts}.csv");
 
-        WriteRow(
-            time,
-            sessionTime,
-            GetUserId(),
-            category,
-            action,
-            target,
-            value,
-            details
-        );
-    }
+        _writer = new StreamWriter(_filePath, false);
+        _writer.AutoFlush = true;
 
-    // --------------------------------------------------
-    // FILE HANDLING
-    // --------------------------------------------------
-    private void OpenFile()
-    {
-        string timestamp = DateTime.Now.ToString("yyyyMMdd_HHmmss");
-        string fileName = $"{filePrefix}_{timestamp}.csv";
-        filePath = Path.Combine(Application.persistentDataPath, fileName);
+        _writer.WriteLine("Time,SessionTime,UserID,Category,Action,Target,Value,Details");
 
-        writer = new StreamWriter(filePath, false, Encoding.UTF8);
-
-        if (writeHeader)
-        {
-            writer.WriteLine(
-                "Time,SessionTime,UserID,Category,Action,Target,Value,Details"
-            );
-            writer.Flush();
-        }
-
-        Debug.Log($"[Analytics] CSV Logging Started -> {filePath}");
+        Debug.Log($"[Analytics] CSV Logging Started -> {_filePath}");
     }
 
     private void CloseFile()
     {
-        if (writer == null) return;
+        if (_writer == null) return;
+        _writer.Flush();
+        _writer.Close();
+        _writer = null;
 
-        writer.Flush();
-        writer.Close();
-        writer = null;
-
-        Debug.Log($"[Analytics] CSV Logging Closed -> {filePath}");
+        Debug.Log($"[Analytics] CSV Logging Closed -> {_filePath}");
     }
 
-    private void WriteRow(
-        string time,
-        string sessionTime,
-        string userId,
-        string category,
-        string action,
-        string target,
-        string value,
-        string details
-    )
+    public void LogEvent(string category, string action, string target, float value, string details)
     {
-        string row =
-            $"{Csv(time)},{Csv(sessionTime)},{Csv(userId)}," +
-            $"{Csv(category)},{Csv(action)},{Csv(target)}," +
-            $"{Csv(value)},{Csv(details)}";
+        if (_writer == null) return;
 
-        writer.WriteLine(row);
-        writer.Flush();
+        float now = Time.time;
+        float sessionTime = now - _startTime;
+
+        string v = value.ToString("0.###", CultureInfo.InvariantCulture);
+        string d = Escape(details);
+        string t = Escape(target);
+
+        _writer.WriteLine($"{now:0.00},{sessionTime:0.00},{_userId},{Escape(category)},{Escape(action)},{t},{v},{d}");
     }
 
-    // --------------------------------------------------
-    // HELPERS
-    // --------------------------------------------------
-    private string GetUserId()
-    {
-        // Simple anonymous user/device identifier
-        return SystemInfo.deviceUniqueIdentifier;
-    }
-
-    private string Csv(string s)
+    private string Escape(string s)
     {
         if (string.IsNullOrEmpty(s)) return "";
-
-        s = s.Replace("\n", " ").Replace("\r", " ");
-        if (s.Contains(",") || s.Contains("\""))
-        {
-            s = s.Replace("\"", "\"\"");
-            s = $"\"{s}\"";
-        }
+        s = s.Replace("\"", "\"\"");
+        if (s.Contains(",") || s.Contains("\n") || s.Contains("\r"))
+            return $"\"{s}\"";
         return s;
     }
-
-    public string GetFilePath() => filePath;
 }

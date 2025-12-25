@@ -2,57 +2,38 @@ using UnityEngine;
 
 public class AnalyticsManager : MonoBehaviour
 {
-    public static AnalyticsManager Instance;
+    public static AnalyticsManager Instance { get; private set; }
+
+    [SerializeField] private bool enableCsv = true;
+    [SerializeField] private bool enableUgs = true;
+
+    private AnalyticsFileLogger _fileLogger;
 
     private void Awake()
     {
-        if (Instance == null)
-        {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
+        if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
+            return;
         }
+
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
+
+        _fileLogger = FindObjectOfType<AnalyticsFileLogger>();
     }
 
-    /// <summary>
-    /// استاندارد واحد لاگ
-    /// </summary>
-    /// <param name="category">UI, Gaze, Session, Teleport, Interaction</param>
-    /// <param name="action">Action name</param>
-    /// <param name="name">Object/UI name</param>
-    /// <param name="value">Optional value</param>
-    /// <param name="details">Optional details</param>
-    public void LogEvent(
-        string category,
-        string action,
-        string name = "",
-        string value = "",
-        string details = ""
-    )
+    public void LogEvent(string category, string action, string target = "", float value = 0f, string details = "")
     {
-        string log =
-            $"[Analytics]" +
-            $"[{category}] " +
-            $"Action={action} " +
-            $"Name={name} " +
-            $"Value={value} " +
-            $"Details={details} " +
-            $"Time={Time.time:0.00}";
-
-        Debug.Log(log);
-
-        // اگر CSV Logger هست، همزمان بنویس
-        if (AnalyticsFileLogger.Instance != null)
+        if (enableCsv && _fileLogger != null)
         {
-            AnalyticsFileLogger.Instance.LogEvent(
-                action,
-                name,
-                value,
-                details
-            );
+            _fileLogger.LogEvent(category, action, target, value, details);
+        }
+
+        if (enableUgs && UnityAnalyticsManager.Instance != null)
+        {
+            int valueInt = Mathf.RoundToInt(value * 1000f);
+            UnityAnalyticsManager.Instance.LogEvent(category, action, target, valueInt, details);
         }
     }
 }

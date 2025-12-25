@@ -2,30 +2,20 @@ using UnityEngine;
 
 public class TeleportEvents : MonoBehaviour
 {
-    private Vector3 lastPosition;
+    [SerializeField] private string category = "Teleport";
 
-    private void Start()
+    public void LogTeleport(string targetName = "")
     {
-        lastPosition = transform.position;
-    }
+        if (AnalyticsManager.Instance == null) return;
 
-    // this function is called when the player teleports to a new position
-    public void OnTeleport()
-    {
-        Vector3 newPosition = transform.position;
+        string target = string.IsNullOrEmpty(targetName) ? "Teleport" : targetName;
 
-        Debug.Log($"[Analytics][Teleport] From {lastPosition} To {newPosition}");
-
-        if (AnalyticsManager.Instance != null)
-        {
-            AnalyticsManager.Instance.LogEvent(
-                "Teleport",
-                "Teleport",
-                gameObject.name,
-                $"From:{lastPosition} To:{newPosition}"
-            );
-        }
-
-        lastPosition = newPosition;
+        AnalyticsManager.Instance.LogEvent(
+            category,
+            "Teleport",
+            target,
+            1f,
+            ""
+        );
     }
 }

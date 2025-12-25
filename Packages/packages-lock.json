@@ -1,5 +1,20 @@
 {
   "dependencies": {
+    "com.gameanalytics.sdk": {
+      "version": "https://github.com/GameAnalytics/GA-SDK-UNITY.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "com.google.external-dependency-manager": "1.2.168"
+      },
+      "hash": "bd69624335594f29eba0e78a68e6a70eb857f4b6"
+    },
+    "com.google.external-dependency-manager": {
+      "version": "file:../GooglePackages/com.google.external-dependency-manager-1.2.177.tgz",
+      "depth": 0,
+      "source": "local-tarball",
+      "dependencies": {}
+    },
     "com.unity.burst": {
       "version": "1.8.19",
       "depth": 1,

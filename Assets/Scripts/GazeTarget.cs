@@ -1,40 +1,20 @@
 using UnityEngine;
-using UnityEngine.XR.Interaction.Toolkit;
 
 public class GazeTarget : MonoBehaviour
 {
-    public float minGazeTime = 0.5f;
+    [SerializeField] private string category = "Gaze";
+    [SerializeField] private float holdValue = 0.5f;
 
-    private float timer;
-    private bool gazing;
-
-    public void OnGazeEnter(HoverEnterEventArgs args)
+    public void LogGazeHold()
     {
-        gazing = true;
-        timer = 0f;
-    }
+        if (AnalyticsManager.Instance == null) return;
 
-    public void OnGazeExit(HoverExitEventArgs args)
-    {
-        gazing = false;
-        timer = 0f;
-    }
-
-    void Update()
-    {
-        if (!gazing) return;
-
-        timer += Time.deltaTime;
-        if (timer >= minGazeTime)
-        {
-            AnalyticsManager.Instance?.LogEvent(
-                "Gaze",
-                "GazeHold",
-                gameObject.name,
-                minGazeTime.ToString("0.00")
-            );
-
-            timer = 0f;
-        }
+        AnalyticsManager.Instance.LogEvent(
+            category,
+            "GazeHold",
+            gameObject.name,
+            holdValue,
+            ""
+        );
     }
 }

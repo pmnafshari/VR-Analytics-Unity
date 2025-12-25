@@ -28,3 +28,49 @@ Logs/
 
 # Python
 __pycache__/
+# =========================
+# Unity generated folders
+# =========================
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+[Mm]emoryCaptures/
+
+# =========================
+# Analytics & local logs
+# =========================
+**/session_*.csv
+**/analytics_*.csv
+
+# =========================
+# Unity cache & packages
+# =========================
+[Ll]ibrary/PackageCache/
+[Pp]ackages/packages-lock.json
+
+# =========================
+# IDE / OS files
+# =========================
+.vscode/
+.idea/
+*.suo
+*.user
+*.userprefs
+*.pidb
+*.booproj
+*.svd
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+
+# =========================
+# Crash & debug
+# =========================
+sysinfo.txt
+crashlytics-build.properties
