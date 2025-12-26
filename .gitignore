@@ -74,3 +74,31 @@ Thumbs.db
 # =========================
 sysinfo.txt
 crashlytics-build.properties
+
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+[Uu]ser[Ss]ettings/
+[Mm]emoryCaptures/
+
+.DS_Store
+*.csproj
+*.sln
+*.user
+*.unityproj
+*.pidb
+*.booproj
+*.svd
+*.pdb
+*.mdb
+*.opendb
+*.VC.db
+
+.vscode/
+.idea/
+
+# crash/lock files
+*.lock
